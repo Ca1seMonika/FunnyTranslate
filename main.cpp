@@ -7,15 +7,15 @@
 #include"main.h"
 
 int main(int args, char** argv) {
-    InfoIO infoio;
-    for(int i = 1; i < args; i++){
-        if(strncmp(argv[i], "-f", 2) == 0){
-            infoio.SetParams(FROM, argv[i] + 2);
-        }else if(strncmp(argv[i], "-t", 2) == 0){
-            infoio.SetParams(TO, argv[i] + 2);
-        }else if(strncmp(argv[i], "-n", 2) == 0){
-            infoio.SetParams(TIMES, argv[i] + 2);
-        }else if(strcmp(argv[i], "-h") == 0){
+	InfoIO infoio;
+	for(int i = 1; i < args; i++){
+		if(strncmp(argv[i], "-f", 2) == 0){
+			infoio.SetParams(FROM, argv[i] + 2);
+		}else if(strncmp(argv[i], "-t", 2) == 0){
+			infoio.SetParams(TO, argv[i] + 2);
+		}else if(strncmp(argv[i], "-n", 2) == 0){
+			infoio.SetParams(TIMES, argv[i] + 2);
+		}else if(strcmp(argv[i], "-h") == 0){
 			std::cout 
 				<< "这是一个生草翻译程序\n"
 				<< "在content.txt文件中输入你想翻译的内容,在powershell运行该程序并填入相应的参数,\
@@ -26,14 +26,14 @@ int main(int args, char** argv) {
 				<< "-n: 翻译次数,如: -n20, 默认为20\n"
 				<< "-h: 这个帮助文档\n";
 			return 0;
-        }
-    }
+		}
+	}
 
-    infoio.SetParams(IDKEY, 0);
-    infoio.SetParams(CONTENT, 0);
-    
-    RES res = infoio.CheckParams();
-    if (res == PARA_OK) {
+	infoio.SetParams(IDKEY, 0);
+	infoio.SetParams(CONTENT, 0);
+
+	RES res = infoio.CheckParams();
+	if (res == PARA_OK) {
 		StartTranslate();
 	}
 	else if (res == ERR_PARA_Q) {
@@ -61,72 +61,72 @@ int main(int args, char** argv) {
 	else if (res == ERR_PARA_ST) {
 		std::cout << "源语言类型与翻译语言类型相同" << std::endl;
 	}
-    return 0;
+	return 0;
 }
 
 InfoIO::InfoIO() {
-    from = "zh", to = "en", transTimes = 20;
-    infoIn.open("UserInfo.txt", std::ios::in);
-    infoOut.open("Output/Out.txt", std::ios::out | std::ios::trunc);
-    sTrans.open("content.txt", std::ios::in);
+	from = "zh", to = "en", transTimes = 20;
+	infoIn.open("UserInfo.txt", std::ios::in);
+	infoOut.open("Output/Out.txt", std::ios::out | std::ios::trunc);
+	sTrans.open("content.txt", std::ios::in);
 }
 
 InfoIO::~InfoIO() {
-    infoIn.close();
-    infoOut.close();
-    sTrans.close();
+	infoIn.close();
+	infoOut.close();
+	sTrans.close();
 }
 
 template <typename ParamContent>
 void InfoIO::SetParams(PTYPE t, ParamContent pC) {
-    switch(t){
-        case IDKEY: {
-            infoIn >> appId;
-            infoIn >> key;
-            appId = appId.substr(6);
-            key = key.substr(10);
-            break;
-        }
-        case CONTENT: {
-            std::string s = "";
-            while(sTrans >> s){
-                transTimes += s + "%20";
-            }
-            transTimes[transTimes.size() - 3] = '\0';
-            break;
-        }
-        case FROM: {
-            from = pC;
-            break;
-        }
-        case TO: {
-            to = pC;
-            break;
-        }
-        case TIMES: {
-            transTimes = pC;
-            break;
-        }
-    }
+	switch(t){
+		case IDKEY: {
+			infoIn >> appId;
+			infoIn >> key;
+			appId = appId.substr(6);
+			key = key.substr(10);
+			break;
+		}
+		case CONTENT: {
+			std::string s = "";
+			while(sTrans >> s){
+				transTimes += s + "%20";
+			}
+			transTimes[transTimes.size() - 3] = '\0';
+			break;
+		}
+		case FROM: {
+			from = pC;
+			break;
+		}
+		case TO: {
+			to = pC;
+			break;
+		}
+		case TIMES: {
+			transTimes = pC;
+			break;
+		}
+	}
 }
 
 RES InfoIO::CheckParams() {
-    if(transContent.size() == 0){
-        return ERR_PARA_Q;
-    }else if(transTimes == 0){
-        return ERR_PARA_C;
-    }else if(appId.size() == 0){
-        return ERR_PARA_ID;
-    }else if(key.size() == 0){
-        return ERR_PARA_KEY;
-    }else if(from != "zh" && from != "en" && from != "jp"){
-        return ERR_PARA_F;
-    }else if(to != "zh" && to != "en" && to != "jp"){
-        return ERR_PARA_T;
-    }else if(to == from){
-        return ERR_PARA_ST;
-    }
-    return PARA_OK;
+	if(transContent.size() == 0){
+		return ERR_PARA_Q;
+	}else if(transTimes == 0){
+		return ERR_PARA_C;
+	}else if(appId.size() == 0){
+		return ERR_PARA_ID;
+	}else if(key.size() == 0){
+		return ERR_PARA_KEY;
+	}else if(from != "zh" && from != "en" && from != "jp"){
+		return ERR_PARA_F;
+	}else if(to != "zh" && to != "en" && to != "jp"){
+		return ERR_PARA_T;
+	}else if(to == from){
+		return ERR_PARA_ST;
+	}
+	return PARA_OK;
 }
 
 void StartTranslate() {
