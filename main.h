@@ -54,13 +54,13 @@ public:
 
     /**
      * @describe 调用其他类的函数, 开始翻译
-     * @return string 翻译的结果
+     * @return void
      */
-    std::string StartTranslate();
+    void StartTranslate();
 
-    std::fstream infoOut;
 private:
     std::fstream infoIn;
+    std::fstream infoOut;
     std::fstream sTrans;
 
     std::string transContent;

@@ -37,29 +37,29 @@ int main(int args, char** argv) {
 		StartTranslate();
 	}
 	else if (res == ERR_PARA_Q) {
-		infoio.infoOut << "未输入翻译内容 " << std::endl;
+		std::cout << "未输入翻译内容 " << std::endl;
 	}
 	else if (res == ERR_PARA_C) {
-		infoio.infoOut << "翻译次数输入错误" << std::endl;
+		std::cout << "翻译次数输入错误" << std::endl;
 	}
 	else if (res == ERR_PARA_ID) {
-		infoio.infoOut << "app_id为空" << std::endl;
-		infoio.infoOut << "访问 http://api.fanyi.baidu.com/ 获取你的id" << std::endl;
+		std::cout << "app_id为空" << std::endl;
+		std::cout << "访问 http://api.fanyi.baidu.com/ 获取你的id" << std::endl;
 	}
 	else if (res == ERR_PARA_KEY) {
-		infoio.infoOut << "secret_key为空" << std::endl;
-		infoio.infoOut << "访问 http://api.fanyi.baidu.com/ 获取你的key" << std::endl;
+		std::cout << "secret_key为空" << std::endl;
+		std::cout << "访问 http://api.fanyi.baidu.com/ 获取你的key" << std::endl;
 	}
 	else if (res == ERR_PARA_F) {
-		infoio.infoOut << "不支持的翻译源类型 " << std::endl;
-		infoio.infoOut << "支持的翻译源类型有:中文:zh,英文:en,日文:jp" << std::endl;
+		std::cout << "不支持的翻译源类型 " << std::endl;
+		std::cout << "支持的翻译源类型有:中文:zh,英文:en,日文:jp" << std::endl;
 	}
 	else if (res == ERR_PARA_T) {
-		infoio.infoOut << "不支持的翻译目标类型" << std::endl;
-		infoio.infoOut << "支持的翻译目标类型有:中文:zh,英文:en,日文:jp" << std::endl;
+		std::cout << "不支持的翻译目标类型" << std::endl;
+		std::cout << "支持的翻译目标类型有:中文:zh,英文:en,日文:jp" << std::endl;
 	}
 	else if (res == ERR_PARA_ST) {
-		infoio.infoOut << "源语言类型与翻译语言类型相同" << std::endl;
+		std::cout << "源语言类型与翻译语言类型相同" << std::endl;
 	}
     return 0;
 }
