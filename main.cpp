@@ -16,15 +16,15 @@ int main(int args, char** argv) {
         }else if(strncmp(argv[i], "-n", 2) == 0){
             infoio.SetParams(TIMES, argv[i] + 2);
         }else if(strcmp(argv[i], "-h") == 0){
-            std::cout << "这是一个生草翻译程序\n"
-                        << "在content.txt文件中输入你想翻译的内容,在powershell运行该程序并填入相应的参数,\
-                        就可在Output/Out.txt文件中得到生草的翻译结果(生草程度取决于你输入的参数)\n"
-                        << "-f: 源语言类型,如: -fzh, 默认为zh\n"
-					    << "-t; 翻译语言类型,如: -ten, 默认为en\n"
-					    << "[-f 与 -t的可选项都为: 中文:zh,英文:en,日文:jp]\n"
-					    << "-n: 翻译次数,如: -n20, 默认为20\n"
+			std::cout << "这是一个生草翻译程序\n"
+						<< "在content.txt文件中输入你想翻译的内容,在powershell运行该程序并填入相应的参数,\
+						就可在Output/Out.txt文件中得到生草的翻译结果(生草程度取决于你输入的参数)\n"
+						<< "-f: 源语言类型,如: -fzh, 默认为zh\n"
+						<< "-t; 翻译语言类型,如: -ten, 默认为en\n"
+						<< "[-f 与 -t的可选项都为: 中文:zh,英文:en,日文:jp]\n"
+						<< "-n: 翻译次数,如: -n20, 默认为20\n"
 						<< "-h: 这个帮助文档\n";
-            return 0;
+			return 0;
         }
     }
 
