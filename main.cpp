@@ -34,8 +34,7 @@ int main(int args, char** argv) {
     
     RES res = infoio.CheckParams();
     if (res == PARA_OK) {
-		
-		
+		StartTranslate();
 	}
 	else if (res == ERR_PARA_Q) {
 		infoio.infoOut << "未输入翻译内容 " << std::endl;
@@ -104,7 +103,7 @@ void InfoIO::SetParams(PTYPE t, ParamContent pC) {
             to = pC;
             break;
         }
-        case TIME: {
+        case TIMES: {
             transTimes = pC;
             break;
         }
@@ -130,6 +129,6 @@ RES InfoIO::CheckParams() {
     return PARA_OK;
 }
 
-std::string StartTranslate() {
+void StartTranslate() {
 
 }
