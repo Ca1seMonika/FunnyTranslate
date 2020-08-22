@@ -4,7 +4,11 @@
 #include<iostream>
 #include<fstream>
 #include<cstring>
+#include<string>
 #include"Translate.h"
+
+std::string appId = "";
+std::string key = "";
 
 enum RES {
 	//所有参数正常
@@ -43,8 +47,7 @@ public:
 	 * @params t: 选择要设置的变量, pC: 设置的内容
 	 * @return void
 	*/
-	template <typename ParamContent>
-	void SetParams(PTYPE t, ParamContent pC);
+	void SetParams(PTYPE t, std::string pC);
 
 	/**
 	 * @describe 检查appId, key, transContent, transTimes, from, to变量的值是否被正确设置
@@ -53,24 +56,19 @@ public:
 	RES CheckParams();
 
 	/**
-	 * @describe 调用其他类的函数, 开始翻译
+	 * 调用其他类函数,开始翻译
 	 * @return void
 	 */
-	void StartTranslate();
-
+	void Start();	
 private:
 	std::fstream infoIn;
 	std::fstream infoOut;
 	std::fstream sTrans;
 
 	std::string transContent;
-	std::string appId;
-	std::string key;
 	std::string from;
 	std::string to;
 	int transTimes;
-
-	Translate translate;
 };
 
 #endif

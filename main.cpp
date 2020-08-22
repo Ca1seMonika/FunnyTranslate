@@ -1,6 +1,6 @@
 /**
  * main.cpp 
- * 翻译程序的主框架,负责文件的读写,主要请求参数的设置,以及开始翻译请求
+ * 翻译程序的主框架,负责文件的读写,主要请求参数的设置,以及开始翻译
  * author: Wu Zihao
  * date: 2020.8.20
  */
@@ -20,6 +20,7 @@ int main(int args, char** argv) {
 				<< "这是一个生草翻译程序\n"
 				<< "在content.txt文件中输入你想翻译的内容,在powershell运行该程序并填入相应的参数,\
 				就可在Output/Out.txt文件中得到生草的翻译结果(生草程度取决于你输入的参数)\n"
+				<< "为保证翻译质量及软件正常运作, 翻译内容不要超过6000个字节(中文约2000字)\n"
 				<< "-f: 源语言类型,如: -fzh, 默认为zh\n"
 				<< "-t; 翻译语言类型,如: -ten, 默认为en\n"
 				<< "[-f 与 -t的可选项都为: 中文:zh,英文:en,日文:jp]\n"
@@ -34,7 +35,7 @@ int main(int args, char** argv) {
 
 	RES res = infoio.CheckParams();
 	if (res == PARA_OK) {
-		StartTranslate();
+		infoio.Start();
 	}
 	else if (res == ERR_PARA_Q) {
 		std::cout << "未输入翻译内容 " << std::endl;
@@ -77,8 +78,7 @@ InfoIO::~InfoIO() {
 	sTrans.close();
 }
 
-template <typename ParamContent>
-void InfoIO::SetParams(PTYPE t, ParamContent pC) {
+void InfoIO::SetParams(PTYPE t, std::string pC) {
 	switch(t){
 		case IDKEY: {
 			infoIn >> appId;
@@ -90,9 +90,9 @@ void InfoIO::SetParams(PTYPE t, ParamContent pC) {
 		case CONTENT: {
 			std::string s = "";
 			while(sTrans >> s){
-				transTimes += s + "%20";
+				transContent += s + "%20";
 			}
-			transTimes[transTimes.size() - 3] = '\0';
+			transContent[transContent.size() - 3] = '\0';
 			break;
 		}
 		case FROM: {
@@ -104,7 +104,7 @@ void InfoIO::SetParams(PTYPE t, ParamContent pC) {
 			break;
 		}
 		case TIMES: {
-			transTimes = pC;
+			transTimes = atoi(pC.c_str());
 			break;
 		}
 	}
@@ -129,6 +129,10 @@ RES InfoIO::CheckParams() {
 	return PARA_OK;
 }
 
-void StartTranslate() {
-
+void InfoIO::Start() {
+	std::string transRes;
+	Translate translate(transContent, from, to);
+	
+	transRes = translate.StartTranslate(transTimes);
+	infoOut << transRes;
 }
