@@ -2,15 +2,15 @@
 #define _TRANSLATE_H_
 
 #include<string>
-#include<sstream>
+#include<winsock2.h>
 #include<openssl/md5.h>
-#include"socketpost.h"
+#include"curlpost.h"
 
 class Translate {
 public:
     Translate(std::string content,
-                std::string from,
-                std::string to);
+              std::string from,
+              std::string to);
     ~Translate();
 
     /**
