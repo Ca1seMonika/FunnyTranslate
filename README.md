@@ -3,7 +3,7 @@
 ## 如何使用?
 1.在[百度翻译开放平台](http://api.fanyi.baidu.com/)创建你的账户并申请通用翻译api(免费)  
 2.下载Release文件夹, 在UserInfo.txt中填入平台分配给你的appid与key, 保存并关闭  
-3.在content文件夹中输入你要翻译的结果  
+3.在content.txt文件中输入你要翻译的结果  
 4.打开powershell进入Release文件夹, 输入命令:
 ```
 .\FunnyTranslate
