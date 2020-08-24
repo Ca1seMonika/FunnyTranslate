@@ -21,21 +21,19 @@ char* UnicodeToUtf8(const wchar_t* unicode)
     return szUtf8;
 }
 
-Translate::Translate(std::string content,
-                     std::string from,
-                     std::string to) {
+Translate::Translate(std::string content) {
     this->content = content;
-    this->from = from;
-    this->to = to;
+    this->from = "zh";
+    this->to = "jp";
 }
 
 Translate::~Translate() {
 }
 
-std::string Translate::StartTranslate(int transTimes) {
-    for(int i = 0; i < transTimes; i++){
+std::string Translate::StartTranslate() {
+    for(int i = 0; i < 10; i++){
         SingleTranslate();
-        if(i != transTimes - 1) Sleep(1000);
+        if(i != 9) Sleep(1000);
     }
 
     return content;
@@ -50,7 +48,7 @@ void Translate::SingleTranslate() {
     curlpost.SetPostFields(param);
     transResult = curlpost.StartPostRequest();
     DealContent();
-    std::swap(from, to);
+    from = "jp", to = "en";
 
     Sleep(1000);
 
@@ -58,7 +56,15 @@ void Translate::SingleTranslate() {
     curlpost.SetPostFields(param);
     transResult = curlpost.StartPostRequest();
     DealContent();
-    std::swap(from, to);
+    from = "en", to = "zh";
+
+    Sleep(1000);
+
+    param = SetParam();
+    curlpost.SetPostFields(param);
+    transResult = curlpost.StartPostRequest();
+    DealContent();
+    from = "zh", to = "jp";
 }
 
 std::string Translate::SetParam() {

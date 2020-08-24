@@ -24,8 +24,8 @@ std::string CurlPost::StartPostRequest() {
     CURLcode reqRes;
 
     if(curl == NULL){
-        std::cout << "curl初始化失败,请重试" << std::endl;
-        exit(0);
+        std::cerr << "curl初始化失败,请重试" << std::endl;
+        exit(-1);
     }
 
     curl_slist* header = NULL;
@@ -43,14 +43,14 @@ std::string CurlPost::StartPostRequest() {
     curl_easy_cleanup(curl);
 
     if(reqRes != CURLE_OK){
-        std::cout << "curl请求失败, 失败原因: " << curl_easy_strerror(reqRes) << std::endl;
-        exit(0);
+        std::cerr << "curl请求失败, 失败原因: " << curl_easy_strerror(reqRes) << std::endl;
+        exit(-1);
     }
 
     size_t tar = responseContent.find("error_code");
     if(tar != std::string::npos){
-        std::cout << "服务器返回错误, 错误代码: " << responseContent.substr(tar + 13, 5) << std::endl;
-        exit(0);
+        std::cerr << "服务器返回错误, 错误代码: " << responseContent.substr(tar + 13, 5) << std::endl;
+        exit(-1);
     }
 
     tar = responseContent.find("dst\":\"");

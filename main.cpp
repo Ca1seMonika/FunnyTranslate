@@ -8,30 +8,18 @@
 
 int main(int args, char** argv) {
     InfoIO infoio;
-    for(int i = 1; i < args; i++){
-        if(strncmp(argv[i], "-f", 2) == 0){
-            infoio.SetParams(FROM, argv[i] + 2);
-        }else if(strncmp(argv[i], "-t", 2) == 0){
-            infoio.SetParams(TO, argv[i] + 2);
-        }else if(strncmp(argv[i], "-n", 2) == 0){
-            infoio.SetParams(TIMES, argv[i] + 2);
-        }else if(strcmp(argv[i], "-h") == 0){
-            std::cout
-                    << "这是一个生草翻译程序\n"
-                    << "在content.txt文件中输入你想翻译的内容,在powershell运行该程序并填入相应的参数,"
-                       "就可在Output/Out.txt文件中得到生草的翻译结果(生草程度取决于你输入的参数)\n"
-                    << "为保证翻译质量及软件正常运作, 翻译内容不要超过6000个字节(中文约2000字)\n"
-                    << "-f: 源语言类型,如: -fzh, 默认为zh\n"
-                    << "-t; 翻译语言类型,如: -ten, 默认为en\n"
-                    << "[-f 与 -t的可选项都为: 中文:zh,英文:en,日文:jp]\n"
-                    << "-n: 翻译次数,如: -n20, 默认为20\n"
-                    << "-h: 这个帮助文档\n";
-            return 0;
-        }
+
+    if(args != 1){
+        std::cout
+                << "这是一个生草翻译程序\n"
+                << "在content.txt文件中输入你想翻译的内容, 在powershell运行该程序, 在该程序运行结束后就可在Output/Out.txt看到翻译结果\n"
+                << "为保证软件正常运作, 翻译内容不要超过6000个字节(中文约2000字)\n"
+                << "您不需要输入任何参数\n";
+        return 0;
     }
 
-    infoio.SetParams(IDKEY, "");
-    infoio.SetParams(CONTENT, "");
+    infoio.SetParams(IDKEY);
+    infoio.SetParams(CONTENT);
 
     RES res = infoio.CheckParams();
     if (res == PARA_OK) {
@@ -39,9 +27,6 @@ int main(int args, char** argv) {
     }
     else if (res == ERR_PARA_Q) {
         std::cout << "未输入翻译内容 " << std::endl;
-    }
-    else if (res == ERR_PARA_C) {
-        std::cout << "翻译次数输入错误" << std::endl;
     }
     else if (res == ERR_PARA_ID) {
         std::cout << "app_id为空" << std::endl;
@@ -51,22 +36,10 @@ int main(int args, char** argv) {
         std::cout << "secret_key为空" << std::endl;
         std::cout << "访问 http://api.fanyi.baidu.com/ 获取你的key" << std::endl;
     }
-    else if (res == ERR_PARA_F) {
-        std::cout << "不支持的翻译源类型 " << std::endl;
-        std::cout << "支持的翻译源类型有:中文:zh,英文:en,日文:jp" << std::endl;
-    }
-    else if (res == ERR_PARA_T) {
-        std::cout << "不支持的翻译目标类型" << std::endl;
-        std::cout << "支持的翻译目标类型有:中文:zh,英文:en,日文:jp" << std::endl;
-    }
-    else if (res == ERR_PARA_ST) {
-        std::cout << "源语言类型与翻译语言类型相同" << std::endl;
-    }
     return 0;
 }
 
 InfoIO::InfoIO() {
-    from = "zh", to = "en", transTimes = 20;
     infoIn.open("UserInfo.txt", std::ios::in);
     infoOut.open("Output/Out.txt", std::ios::out | std::ios::trunc);
     sTrans.open("content.txt", std::ios::in);
@@ -78,33 +51,30 @@ InfoIO::~InfoIO() {
     sTrans.close();
 }
 
-void InfoIO::SetParams(PTYPE t, std::string pC) {
-    switch(t){
+void InfoIO::SetParams(PTYPE t) {
+    switch (t) {
         case IDKEY: {
             infoIn >> appId;
             infoIn >> key;
-            appId = appId.substr(7);
-            key = key.substr(11);
+            try {
+                if(appId.size() < 7 || key.size() < 11){
+                    throw "UserInfo.txt可能未创建,请创建UserInfo.txt并填入你的appid与key";
+                }
+                appId = appId.substr(7);
+                key = key.substr(11);
+            } catch (const char* errmsg){
+                std::cerr << errmsg << std::endl;
+                exit(-1);
+            }
             break;
         }
         case CONTENT: {
             std::string s = "";
-            while(sTrans >> s){
-                transContent += s + " ";
+            sTrans >> s;
+            transContent += s;
+            while (sTrans >> s) {
+                transContent += " " + s;
             }
-            transContent.resize(transContent.size() - 1);
-            break;
-        }
-        case FROM: {
-            from = pC;
-            break;
-        }
-        case TO: {
-            to = pC;
-            break;
-        }
-        case TIMES: {
-            transTimes = atoi(pC.c_str());
             break;
         }
     }
@@ -113,26 +83,18 @@ void InfoIO::SetParams(PTYPE t, std::string pC) {
 RES InfoIO::CheckParams() {
     if(transContent.size() == 0){
         return ERR_PARA_Q;
-    }else if(transTimes == 0){
-        return ERR_PARA_C;
     }else if(appId.size() == 0){
         return ERR_PARA_ID;
-    }else if(key.size() == 0){
+    }else if(key.size() == 0) {
         return ERR_PARA_KEY;
-    }else if(from != "zh" && from != "en" && from != "jp"){
-        return ERR_PARA_F;
-    }else if(to != "zh" && to != "en" && to != "jp"){
-        return ERR_PARA_T;
-    }else if(to == from){
-        return ERR_PARA_ST;
     }
     return PARA_OK;
 }
 
 void InfoIO::Start() {
     std::string transRes;
-    Translate translate(transContent, from, to);
+    Translate translate(transContent);
 
-    transRes = translate.StartTranslate(transTimes);
+    transRes = translate.StartTranslate();
     infoOut << transRes;
 }

@@ -8,17 +8,14 @@
 
 class Translate {
 public:
-    Translate(std::string content,
-              std::string from,
-              std::string to);
+    Translate(std::string content);
     ~Translate();
 
     /**
      * 开始翻译
-     * @params transTimes: 往返翻译的次数
      * @return string 最终翻译的结果
      */
-    std::string StartTranslate(int transTimes);
+    std::string StartTranslate();
 
 private:
     /**
